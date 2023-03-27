@@ -19,7 +19,7 @@ body{
     border: 1px solid black;
 }
 
-.numbers,
+.number,
 .operators,
 #decimal,
 #equal,
@@ -38,4 +38,14 @@ body{
     height: 100px;
     width: 350px;
     margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+    font-size: 25px;
+}
+
+#prev-values,
+#curr-values{
+    margin: 6px;
 }
