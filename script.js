@@ -1,46 +1,90 @@
+//Specific operator functions
 const clear = document.querySelector('#clear');
 const decimal = document.querySelector('#decimal');
 const equal = document.querySelector('#equal');
 
+//Display values
+let displayPrevValue = document.querySelector('#prev-values');
+let displayCurrValue = document.querySelector('#curr-values');
+
+//Grab all buttons
 let numbers = document.querySelectorAll('.number');
 let operator = document.querySelectorAll('.operators');
 
-let prevValue = document.querySelector('#prev-values');
-let currValue = document.querySelector('#curr-values');
+//Store values
+let currNum = '';
+let prevNum = '';
+let answer = '';
+let selectedOperator = '';
 
-function add(prevValue, currValue){
-    return prevValue + currValue;
-}
-
-function subtraction(prevValue, currValue){
-    return prevValue - currValue;
-}
-
-function multiplication(prevValue, currValue){
-    return prevValue * currValue;
-}
-
-function division(prevValue, currValue){
-    return prevValue/currValue;
-}
-
-function operate(prevValue, currValue, operator){
-    switch(operator){
-        case '+':
-            return add(prevValue, currValue);
-        case '-':
-            return subtraction(prevValue, currValue);
-        case 'x':
-            return multiplication(prevValue, currValue);
-        case '/':
-            return division(prevValue, currValue);
-        default:
-            return 'Error in switch statement.';
+function handleNumber(number){
+    if(currNum.length <= 10){
+        currNum += number;
+        displayCurrValue.textContent = currNum;
     }
 }
 
-numbers.forEach(number => number.addEventListener('click', e => {
-    let num = +(e.target.textContent);
-    currValue.textContent += num;
+function handleOperator(op){
+    selectedOperator = op;
+    prevNum = currNum;
+    displayPrevValue.textContent = prevNum + ' ' + selectedOperator;
+    currNum = '';
+    displayCurrValue.textContent = '';
+}
+
+function reset(){
+    currNum = '';
+    prevNum = '';
+    selectedOperator = '';
+    displayPrevValue.textContent = '';
+    displayCurrValue.textContent = '';
+}
+
+function operate(){
+    displayPrevValue.textContent = `${prevNum} ${selectedOperator} ${currNum} =`
+
+    prevNum = +prevNum;
+    currNum = +currNum;
+
+    switch(selectedOperator){
+        case '+':
+            answer = prevNum + currNum;
+            break;
+        case '-':
+            answer = prevNum - currNum;
+            break;
+        case 'x':
+            answer = prevNum * currNum;
+            break;
+        case '/':
+            answer = prevNum / currNum;
+            break;
+    }
+       
+    answer = Math.round((answer + Number.EPSILON) * 100) / 100;
+
+    displayCurrValue.textContent = answer;
+    currNum = answer;
+}
+
+//Event Listeners
+numbers.forEach(btn => btn.addEventListener('click', e => {
+    handleNumber(e.target.textContent);
 }));
 
+operator.forEach(btn => btn.addEventListener('click', e =>{
+    if(selectedOperator != ''){
+        operate();
+        handleOperator(e.target.textContent);
+    } else{
+        handleOperator(e.target.textContent);
+    }
+}));
+
+equal.addEventListener('click', () => {
+    if(currNum != '' && prevNum != ''){
+        operate();
+    }
+});
+
+clear.addEventListener('click', reset);
