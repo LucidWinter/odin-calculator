@@ -44,6 +44,7 @@ function reset(){
     currNum = '';
     prevNum = '';
     selectedOperator = '';
+    isDecimal = false;
     displayPrevValue.textContent = '';
     displayCurrValue.textContent = '';
 }
