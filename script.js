@@ -16,6 +16,7 @@ let currNum = '';
 let prevNum = '';
 let answer = '';
 let selectedOperator = '';
+let isDecimal = false;
 
 function handleNumber(number){
     if(currNum.length <= 10){
@@ -24,7 +25,14 @@ function handleNumber(number){
     }
 }
 
+function handleDecimal(){
+    isDecimal = true;
+    currNum += '.';
+    displayCurrValue.textContent = currNum;
+}
+
 function handleOperator(op){
+    isDecimal = false;
     selectedOperator = op;
     prevNum = currNum;
     displayPrevValue.textContent = prevNum + ' ' + selectedOperator;
@@ -41,10 +49,16 @@ function reset(){
 }
 
 function operate(){
-    displayPrevValue.textContent = `${prevNum} ${selectedOperator} ${currNum} =`
+    displayPrevValue.textContent = `${prevNum} ${selectedOperator} ${currNum} =`;
 
     prevNum = +prevNum;
     currNum = +currNum;
+
+    if(currNum === 0 && selectedOperator === '/'){
+        currNum = '0';
+        selectedOperator = '';
+        return displayCurrValue.textContent = 'No.';
+    }
 
     switch(selectedOperator){
         case '+':
@@ -65,6 +79,7 @@ function operate(){
 
     displayCurrValue.textContent = answer;
     currNum = answer;
+    selectedOperator = '';
 }
 
 //Event Listeners
@@ -84,6 +99,12 @@ operator.forEach(btn => btn.addEventListener('click', e =>{
 equal.addEventListener('click', () => {
     if(currNum != '' && prevNum != ''){
         operate();
+    }
+});
+
+decimal.addEventListener('click', () => {
+    if(isDecimal == false){
+        handleDecimal();
     }
 });
 
